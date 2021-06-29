@@ -73,8 +73,9 @@ function collapseHeader() {
 	}
 }
 
-window.onmousedown = function(event) {
+window.ontouchstart = function(event) {
 	clickLocation = event.target.className;
+	alert("click")
 	if (clickLocation != "expandableDropdown" && clickLocation != "expandableLink") {
 		collapseHeader()
 	}
