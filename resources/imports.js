@@ -5,7 +5,7 @@ function reference(link) {
 	<a href="${link}" target="_parent">
 		<img src="${link}resources/icon.png" width="64px" height="64px" class="navHomeIcon">
 	</a>
-	<h1 class="navTitle" style="color: blue !important">The Forum Helpers</h1>
+	<h1 class="navTitle" style="color: yellow !important">The Forum Helpers</h1>
 	<a href="${link}forumhelpers" class="navButton" target="_parent">List Of Forum Helpers</a>
 	<a href="https://scratch.mit.edu/studios/3688309/" class="navButton" target="_blank">Our Scratch Studio</a>
 	<a href="https://theforumhelpers.github.io/QuickReply/" class="navButton" target="_parent">QuickReply</a>
@@ -73,7 +73,7 @@ function collapseHeader() {
 	}
 }
 
-window.onclick = function(event) {
+window.onmousedown = function(event) {
 	clickLocation = event.target.className;
 	if (clickLocation != "expandableDropdown" && clickLocation != "expandableLink") {
 		collapseHeader()
