@@ -76,6 +76,9 @@ function collapseHeader() {
 window.ontouchstart = function(event) {
 	clickLocation = event.target.className;
 	if (clickLocation != "expandableDropdown" && clickLocation != "expandableLink") {
-		collapseHeader()
+		collapseHeader();
+	}
+	if (clickLocation == "expandableDropdown) {
+	    expandHeader();
 	}
 }
