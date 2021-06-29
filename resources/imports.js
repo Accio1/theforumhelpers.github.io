@@ -5,7 +5,7 @@ function reference(link) {
 	<a href="${link}" target="_parent">
 		<img src="${link}resources/icon.png" width="64px" height="64px" class="navHomeIcon">
 	</a>
-	<h1 class="navTitle">The Forum Helpers</h1>
+	<h1 class="navTitle" style="color:orange !important">The Forum Helpers</h1>
 	<a href="${link}forumhelpers" class="navButton" target="_parent">List Of Forum Helpers</a>
 	<a href="https://scratch.mit.edu/studios/3688309/" class="navButton" target="_blank">Our Scratch Studio</a>
 	<a href="https://theforumhelpers.github.io/QuickReply/" class="navButton" target="_parent">QuickReply</a>
@@ -78,7 +78,7 @@ window.ontouchstart = function(event) {
 	if (clickLocation != "expandableDropdown" && clickLocation != "expandableLink") {
 		collapseHeader();
 	}
-	if (clickLocation == "expandableDropdown) {
+	if (clickLocation == "expandableDropdown") {
 	    expandHeader();
 	}
 }
