@@ -1,72 +1,99 @@
-var referenceLink = "";
-function reference(link) {
-	referenceLink = link;
-	const headerContent = `
-	<a href="${link}" target="_parent">
-		<img src="${link}resources/icon.png" width="64px" height="64px" class="navHomeIcon">
-	</a>
-	<h1 class="navTitle">The Forum Helpers</h1>
-	<a href="${link}forumhelpers" class="navButton" target="_parent">List Of Forum Helpers</a>
-	<a href="https://scratch.mit.edu/studios/3688309/" class="navButton" target="_blank">Our Scratch Studio</a>
-	<a href="https://theforumhelpers.github.io/QuickReply/" class="navButton" target="_parent">QuickReply</a>
+function getData(dataSet) {
+	var grabDelay = 0
+	fetch("https://theforumhelpers.github.io/forumhelpers/"+dataSet+".json")
+		.then(response => response.json())
+		.then(data => {
+			document.getElementById(dataSet+"Number").innerHTML = data.length;
+			for (j = 0; j < data.length; j++) {
+				var name = data[j].name;
+				var id = data[j].id;
+				var bio = data[j].bio;
+				var section = document.getElementById(dataSet+"List").innerHTML;
+				var addition = `
+				<div class="profileContainer" id="${name.toUpperCase()}">
+					<h4 class="profileName"><a href="https://scratch.mit.edu/users/${name}/">${name}</a><span id="${name}Posts"></span></h4>
+					<div class="profileInner">
+						<a href="https://scratch.mit.edu/users/${name}/"><img src="https://cdn2.scratch.mit.edu/get_image/user/${id}_60x60.png" class="profilePicture" id="${name}pfp" loading="lazy" alt="${name}'s Profile Picture"></a>
+						<p class="profileBio">${bio}</p>
+					</div>
+					<p class="ocularStatusBox" id="${name}Ocular" title="Ocular Status"><span class="ocularStatus" id="${name}Status">Loading Status...</span></p>
+				</div>
+				<hr>`;
+				document.getElementById(dataSet+"List").innerHTML = section + addition;
+				if (j == data.length-1 && dataSet != "curators") {
+					getData("curators");
+				}
+				else if (j == data.length-1) {
+					document.getElementById("totalNumber").innerHTML = parseInt(document.getElementById("managersNumber").innerHTML) + parseInt(document.getElementById("curatorsNumber").innerHTML);
+				}
+				grabDelay = grabDelay + 1000;
+				getOcular(name);
+				setTimeout(getCount, grabDelay, name);
+			}
+		});
 
-	<div class="expandableDropdown" onmouseover="expandHeader()" onmouseout="collapseHeader()">
-		<a class="expandableLink" href="${link}forumhelpers">List Of Forum Helpers</a>
-		<a class="expandableLink" href="https://scratch.mit.edu/studios/3688309/">Our Scratch Studio</a>
-		<a class="expandableLink" href="https://theforumhelpers.github.io/QuickReply/">QuickReply</a>
-	</div>`
-	document.getElementById("header").innerHTML = headerContent;
+}
 
-	const footerContent = `
-	<div class="footerContent">
-		<br>
-		<a onclick="changeTheme()" class="changeTheme" id="changeTheme">Change Theme</a><br>
-		<p><a href="${link}contributors/" class="FHULink" target="_parent">Contributors</a></p>
-		<p><a href="https://github.com/theforumhelpers/theforumhelpers.github.io" class="FHULink" target="_parent">Github Repository</a></p>
-		<p>Be moist <img src="https://cdn.scratch.mit.edu/scratchr2/static/__4f1f321e080ee4987f163566ecc0dd26__/djangobb_forum/img/smilies/cool.png"></p>
-		<p style="font-size: 12px;">This site uses Google Analytics. Check out our <a href="${link}privacy/" class="FHULink" target="_parent">Privacy Policy</a> for more information</p>
-	</div>`
-	document.getElementById("footer").innerHTML = footerContent;
+function getOcular(name) {
+	fetch("https://my-ocular.jeffalo.net/api/user/"+name)
+		.then(response => response.json())
+		.then(data => {
+			var status = data.status;
+			status ??= "none";
+			var ocularDiv = document.getElementById(name+"Ocular");
+			if (status != "none") {
+				document.getElementById(name+"Status").innerText = status;
+				ocularDiv.style.borderColor = data.color;
+			}
+			else {
+				ocularDiv.style.display = "none";
+			}
+			if (document.getElementById(name+"Status").innerText === "" && data.color != undefined) {
+				ocularDiv.style.backgroundColor = data.color;
+				ocularDiv.style.width = "0px";
+			}
+		});
+}
 
-	const privacyContent = `
-	<p style="margin:0px;">This site uses Google Analytics.<br>Check out our <a href="${link}privacy/" class="FHULink" target="_parent">Privacy Policy</a> for more information.</p><br>
-	<button class="privacyButton" onclick="acceptPrivacy()">Okay</button> <button class="privacyButton" onclick="denyPrivacy()">Leave Site</button>`
-	var currentDate = new Date();
-	var currentMonth = currentDate.getMonth();
-	//var currentDay = currentDate.getDate();
-	var storedDate = new Date(localStorage.getItem("FHacceptedDate"));
-	var storedMonth = storedDate.getMonth() ?? 100;
-	//var storedDay = storedDate.getDate() ?? 100;
-	if (currentMonth != storedMonth /*|| storedDay+7 < currentDay*/) {
-		document.getElementById("privacyWarning").innerHTML = privacyContent;
+function getCount(name) {
+	fetch("https://scratchdb.lefty.one/v3/forum/user/info/"+name)
+		.then(response => response.json())
+		.then(data => {
+			var posts = data.counts.total.count;
+			document.getElementById(name+"Posts").innerText = " - "+posts+" Posts";
+		});
+}
+
+
+//Search for a user
+var searchBar = document.getElementById("searchBar")
+var searchButton = document.getElementById("searchButton")
+
+function checkUser() {
+	var searchedUser = searchBar.value.toUpperCase();
+	if (document.getElementById(searchedUser) != undefined) {
+		searchBar.style.borderColor = "green";
+		searchButton.style.borderColor = "green";
+		searchButton.disabled = false;
+		searchButton.title = "Search!";
+	}
+	else if (searchedUser != "") {
+		searchBar.style.borderColor = "#cc0000";
+		searchButton.style.borderColor = "#cc0000";
+		searchButton.disabled = true;
+		searchButton.title = "Invalid Username";
+	}
+	else {
+		searchBar.style.borderColor = "black"
+		searchButton.style.borderColor = "black";
+		searchButton.disabled = true;
+		searchButton.title = "Invalid Username";
 	}
 }
 
-function acceptPrivacy() {
-	var setDate = new Date();
-	localStorage.setItem("FHacceptedAnalytics", "true");
-	localStorage.setItem("FHacceptedDate", setDate);
-	document.getElementById("privacyWarning").style.display = "none";
-}
-
-function denyPrivacy() {
-	localStorage.removeItem("FHacceptedAnalytics");
-	localStorage.removeItem("FHacceptedDate");
-	window.location.href = "https://scratch.mit.edu/studios/3688309/";
-}
-
-function expandHeader() {
-	document.getElementsByClassName("expandableDropdown")[0].style.backgroundImage = "url('" + referenceLink + "resources/arrow.svg')";
-	var headerLinks = document.getElementsByClassName("expandableLink");
-	for (k = 0; k < headerLinks.length; k++) {
-		headerLinks[k].style.display = "inline";
-	}
-}
-
-function collapseHeader() {
-	document.getElementsByClassName("expandableDropdown")[0].style.backgroundImage = "url('" + referenceLink + "resources/expandable.svg')";
-	var headerLinks = document.getElementsByClassName("expandableLink");
-	for (k = 0; k < headerLinks.length; k++) {
-		headerLinks[k].style.display = "none";
+function searchUser() {
+	var searchedUser = searchBar.value.toUpperCase();
+	if (document.getElementById(searchedUser) != undefined) {
+		document.getElementById(searchedUser).scrollIntoView();
 	}
 }
