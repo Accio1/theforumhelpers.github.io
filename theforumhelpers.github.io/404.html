@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang=en>
+	<head>
+		<base>
+		<script>
+			var websitePath = "";
+
+			function findNumberOfForwardSlashes(websiteFullPath){
+				numberOfForwardSlashes = 0;
+				for (var i = 0; i < websiteFullPath.length; i++) {
+					if (websiteFullPath[i] == '/'){
+						numberOfForwardSlashes += 1;
+					}
+				}
+				return numberOfForwardSlashes;
+			}
+
+			if (window.location.host == ""){
+				// then contributor is using file://...
+				var path = window.location.pathname.substring(1 , window.location.pathname.length);
+				numberOfForwardSlashesInPath = findNumberOfForwardSlashes(path);
+
+				var i = 0;
+				var forwardSlashesUntilNow = 0;
+				while (forwardSlashesUntilNow < numberOfForwardSlashesInPath) {
+					if (path[i] == '/') {
+						forwardSlashesUntilNow++;
+					}
+					websitePath += path[i];
+					i++;
+				}
+				console.log(websitePath);
+			}
+			else {
+				// then it is being run either on localhost or on the website. Then the baseHref will be window.location.origin
+				websitePath = window.location.origin;
+			}
+
+			document.getElementsByTagName("base")[0].setAttribute("href", websitePath);
+		</script>
+		<title>404 - Page Not Found</title>
+
+		<link rel="shortcut icon" type="image/png" href="resources/favicon.png">
+		<link rel="stylesheet" type="text/css" href="resources/stylesheet.css">
+
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-197061964-2"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-197061964-2');
+		</script>
+	</head>
+	<body>
+		<header id="header"></header>
+		<div class="lostTitle">
+			<p>404 – Page Not Found</p>
+		</div>
+		<br>
+		<div class="lostContent">
+			<p>Hmmm... looks like you're lost. But don't worry! The magic taco can help you find your way back to the homepage. Just click on it!</p>
+			<a href="/" class="taco" alt="Magic Taco" title="Click me!"><img src="resources/Taco-wizard.svg"></a>
+		</div>
+		<script src="resources/imports.js" onload="reference('./');"></script>
+		<script src="resources/theme.js"></script>
+
+
+	</body>
+</html>
