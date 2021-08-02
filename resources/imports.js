@@ -7,6 +7,7 @@ function reference(link) {
 	<a href="${link}forumhelpers" class="navButton" target="_parent">List Of Forum Helpers</a>
 	<a href="https://scratch.mit.edu/studios/3688309/" class="navButton" target="_blank">Our Scratch Studio</a>
 	<a href="https://theforumhelpers.github.io/QuickReply/" class="navButton" target="_parent">QuickReply</a>
+
 	<div class="expandableDropdown">
 		<a class="expandableLink" href="${link}forumhelpers">List Of Forum Helpers</a>
 		<a class="expandableLink" href="https://scratch.mit.edu/studios/3688309/">Our Scratch Studio</a>
