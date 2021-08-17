@@ -3,25 +3,25 @@
 	<head>
 		<base>
 		<script>
-			var websitePath = "";
-
+			let websitePath = "";
+	
 			function findNumberOfForwardSlashes(websiteFullPath){
 				numberOfForwardSlashes = 0;
-				for (var i = 0; i < websiteFullPath.length; i++) {
+				for (let i = 0; i < websiteFullPath.length; i++) {
 					if (websiteFullPath[i] == '/'){
 						numberOfForwardSlashes += 1;
 					}
 				}
 				return numberOfForwardSlashes;
 			}
-
+	
 			if (window.location.host == ""){
 				// then contributor is using file://...
-				var path = window.location.pathname.substring(1 , window.location.pathname.length);
+				let path = window.location.pathname.substring(1 , window.location.pathname.length);
 				numberOfForwardSlashesInPath = findNumberOfForwardSlashes(path);
-
-				var i = 0;
-				var forwardSlashesUntilNow = 0;
+			
+				let i = 0;
+				let forwardSlashesUntilNow = 0;
 				while (forwardSlashesUntilNow < numberOfForwardSlashesInPath) {
 					if (path[i] == '/') {
 						forwardSlashesUntilNow++;
@@ -33,13 +33,28 @@
 			}
 			else {
 				// then it is being run either on localhost or on the website. Then the baseHref will be window.location.origin
-				websitePath = window.location.origin;
+				// ...except it only works when it is deployed on the TFH website.
+				let path = window.location.host + window.location.pathname;
+				numberOfForwardSlashesInPath = findNumberOfForwardSlashes(path);
+			
+				let i = 0;
+				let forwardSlashesUntilNow = 0;
+				while (forwardSlashesUntilNow < numberOfForwardSlashesInPath) {
+					if (path[i] == '/') {
+						forwardSlashesUntilNow++;
+					}
+					websitePath += path[i];
+					i++;
+				}
+				console.log(websitePath)
+				websitePath = window.location.protocol + "//" + websitePath;
+				console.log(websitePath);
 			}
-
+			
 			document.getElementsByTagName("base")[0].setAttribute("href", websitePath);
-		</script>
+			</script>
 		<title>404 - Page Not Found</title>
-
+		
 		<link rel="shortcut icon" type="image/png" href="resources/favicon.png">
 		<link rel="stylesheet" type="text/css" href="resources/stylesheet.css">
 
@@ -66,6 +81,6 @@
 		<script src="resources/imports.js" onload="reference('./');"></script>
 		<script src="resources/theme.js"></script>
 
-
+		
 	</body>
 </html>
